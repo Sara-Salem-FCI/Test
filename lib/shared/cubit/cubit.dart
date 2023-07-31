@@ -29,7 +29,35 @@ class AppCubit extends Cubit<AppStates>{
     curindex = index;
     emit(AppChangeButNavBarState());
   }
- void createDatabase() {
+  void createDatabase() async {
+    database = await openDatabase(
+        'todo.db',
+        version: 1,
+        onCreate: (database , version){
+          print('database created');
+          database.transaction((txn) async {
+            await txn.execute('CREATE TABLE TASKS(id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT)');
+          }).then((value){
+            print('table created');
+          }).catchError((error){
+            print('error ${error.toString()}');
+          });
+        },
+        onOpen: (database){
+          getDataFromDatabase(database).then((value)
+          { tasks = value;
+          print(tasks);
+          emit(AppGetDatabaseState());
+          });
+          print('database opened');
+        }
+    ).then((value) {
+      database = value;
+      emit(AppCreateDatabaseState());
+    }) as Database;
+  }
+
+  /*void createDatabase() {
     database =  openDatabase(
         'todo.db',
         version: 1,
@@ -53,7 +81,7 @@ class AppCubit extends Cubit<AppStates>{
       database = value;
       emit(AppCreateDatabaseState());
     }) as Database;
-  }
+  }*/
   insertToDatabase({
     required String title,
     required String time,
