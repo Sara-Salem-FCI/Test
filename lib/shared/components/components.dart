@@ -1,4 +1,6 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:mainn/shared/cubit/cubit.dart';
 
 class TextForm extends StatelessWidget {
   final String text;
@@ -149,41 +151,146 @@ class DefultButton extends StatelessWidget {
     );
   }
 }
-Widget Task (Map model) => Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.green[200],
-            radius: 40,
-            child: Text(
-              '${model['time']}',
-              style: TextStyle(
-                color: Colors.black,
+Widget Task (Map model , context ) => Dismissible(
+  key: Key(model['id'].toString()),
+  child:   Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+
+          children: [
+
+            CircleAvatar(
+
+              backgroundColor: Colors.green[200],
+
+              radius: 40,
+
+              child: Text(
+
+                '${model['time']}',
+
+                style: TextStyle(
+
+                  color: Colors.black,
+
+                ),
+
               ),
+
             ),
-          ),
-          SizedBox(width: 20,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${model['title']}',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+
+            SizedBox(width: 20,),
+
+            Expanded(
+
+              child: Column(
+
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                mainAxisSize: MainAxisSize.min,
+
+                children: [
+
+                  Text(
+
+                    '${model['title']}',
+
+                    style: TextStyle(
+
+                      color: Colors.white,
+
+                      fontSize: 20,
+
+                      fontWeight: FontWeight.bold,
+
+                    ),
+
+                  ),
+                  SizedBox(height: 10,),
+
+                  Text(
+
+                    '${model['date']}',
+
+                    style: TextStyle(
+
+                      color: Colors.grey,
+
+                    ),
+
+                  ),
+
+                ],
+
               ),
-              Text(
-                '${model['date']}',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ],
+
+            ),
+
+            SizedBox(width: 20,),
+
+            IconButton(
+
+                onPressed: (){
+
+                  AppCubit.get(context).updateData(status: 'done', id: model['id'],);
+
+                },
+
+                icon:Icon(Icons.check_box,
+
+                color: Colors.grey,) ),
+
+            IconButton(
+
+                onPressed: (){
+
+                  AppCubit.get(context).updateData(status: 'archive', id: model['id'],);
+
+                },
+
+                icon:Icon(Icons.archive,
+
+                color: Colors.grey,) ),
+
+          ],
+
+        ),
+
       ),
-    );
+  onDismissed: (Direction){
+    AppCubit.get(context).deleteData(id: model['id'],);
+  },
+);
+Widget TaskBuilder({
+  required List<Map> tasks,
+}) => ConditionalBuilder(
+  condition: tasks.length > 0 ,
+  builder: (context) => ListView.separated(
+    itemBuilder: (context , index) => Task(tasks[index], context),
+    separatorBuilder: (context , index) => Container(
+      width: double.infinity,
+      height: 1,
+      color: Colors.grey,
+    ),
+    itemCount: tasks.length,),
+  fallback: (context) => Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.assignment_turned_in,
+          color: Colors.grey[800],
+          size: 170,
+        ),
+        Text(
+          'No Tasks Yet',
+          style: TextStyle(
+            color: Colors.grey[700],
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  ),
+);

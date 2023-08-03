@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../shared/components/components.dart';
+import '../../shared/cubit/cubit.dart';
+import '../../shared/cubit/states.dart';
 
-class Archieve extends StatelessWidget {
-  const Archieve({Key? key}) : super(key: key);
-
+class Archive extends StatelessWidget {
+  const Archive({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Archieved Tasks',
-        style: TextStyle(
-          color: Colors.white,
-         fontSize: 25,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context,state){},
+      builder: (context, state){
+        var tasks = AppCubit.get(context).archivedTasks;
+        return TaskBuilder(tasks: tasks);
+      },
     );
   }
 }
