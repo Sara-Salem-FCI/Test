@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mainn/shared/cubit/states.dart';
+import 'package:mainn/shared/network/local/cache_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../modules/archive/archieve.dart';
@@ -121,5 +122,18 @@ class AppCubit extends Cubit<AppStates>{
     isButSheetShow = isShow;
     fabIcon = icon;
     emit(AppChangeButSheetBarState());
+  }
+  bool isDark = false;
+  void changeAppMode( { bool? fromShared}){
+    if(fromShared!= null){
+      isDark=fromShared;
+      emit(AppChangeModeState());
+    }
+    else {
+      isDark=!isDark;
+      CacheHelper.PutBoolean(key: 'isDark', value: isDark ).then((value) {
+        emit(AppChangeModeState());
+      });
+    }
   }
 }

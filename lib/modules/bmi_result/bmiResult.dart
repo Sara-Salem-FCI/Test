@@ -53,31 +53,46 @@ class bmiResult extends StatelessWidget {
                   fontSize: 70,
                 ),
               ),
+            SizedBox(height: 40,),
 
             Row(
               children: [
-                LayoutBuilder(builder: (context, constraints) {
-                  if(result < 18.5){ return Text('You are in the under weight range',
-                    style: TextStyle(
-                      color: Colors.orange,
-                    ),
-                  );}
-                  else if(result>= 18.5 && result<=25){return Text('You are in the healthy weight range',
-                    style: TextStyle(
-                      color: Colors.green,
-                    ),
-                  );}
-                  else if(result> 25 && result<=29.9){return Text('you are in the overweight range',
-                    style: TextStyle(
-                    color: Colors.red,
-                  ),
-                  );}
-                  else{return Text('you are in the obese range',
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
-                  );}
-                    }),
+                Expanded(
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    if(result < 18.5){ return Center(
+                      child: Text('You are in the under weight range',
+                        style: TextStyle(
+                          color: Colors.orange,
+                          fontSize: 20,
+                        ),
+                      ),
+                    );}
+                    else if(result>= 18.5 && result<=25){return Center(
+                      child: Text('You are in the healthy weight range',
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 20,
+                        ),
+                      ),
+                    );}
+                    else if(result> 25 && result<=29.9){return Center(
+                      child: Text('you are in the overweight range',
+                        style: TextStyle(
+                        color: Colors.red,
+                          fontSize: 20,
+                      ),
+                      ),
+                    );}
+                    else{return Center(
+                      child: Text('you are in the obese range',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 20,
+                        ),
+                      ),
+                    );}
+                      }),
+                ),
               ],
             ),
 

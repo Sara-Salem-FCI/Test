@@ -1,5 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:mainn/layout/news_app/news_layout.dart';
+import 'package:mainn/modules/web_view/web_view_screen.dart';
 import 'package:mainn/shared/cubit/cubit.dart';
 
 class TextForm extends StatelessWidget {
@@ -292,5 +294,87 @@ Widget TaskBuilder({
         ),
       ],
     ),
+  ),
+);
+Widget MyDevider () => Container(
+    width: double.infinity,
+    height: 1,
+    color: Colors.grey,
+  );
+Widget buildArticleItem(article, context) {
+  if (article['urlToImage'] != null ) {
+    return InkWell(
+      onTap: (){
+        navigateTo(context, WebViewScreen(article['url']),);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Row(
+          children: [
+            Container(
+              width: 160,
+              height: 120,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10,),
+                image: DecorationImage(
+                  image: NetworkImage('${article['urlToImage']}'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(width: 15,),
+            Expanded(
+              child: Container(
+                height: 120,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${article['title']}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 10,),
+                    Text(
+                      '${article['publishedAt']}',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  } else {
+    return SizedBox.shrink();
+  }
+}
+
+Widget articleBuilder(list , {isSearch=false}) => ConditionalBuilder(
+  condition: list.length >0  ,
+  builder: (context) => ListView.separated(
+    physics: BouncingScrollPhysics(),
+    itemBuilder: (context, index) {
+      if (list[index]['urlToImage'] == null || list[index]['urlToImage'].startsWith('http') == false) {
+        return SizedBox.shrink();
+      }
+      return buildArticleItem(list[index] , context);
+    },
+    separatorBuilder: (context, index) => MyDevider(),
+    itemCount: list.length,),
+  fallback: (context) => isSearch? Container() : Center(child: TweenAnimationBuilder<double> (
+    tween: Tween<double> (begin: 0.0, end: 1),
+    duration: const Duration (milliseconds: 3500),
+    builder: (context, value, _) => CircularProgressIndicator (value: value),
+  )
+  ),
+);
+void navigateTo(context, widget) => Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder:(context) => widget,
   ),
 );

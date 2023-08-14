@@ -10,7 +10,7 @@ import 'package:mainn/shared/cubit/cubit.dart';
 import 'package:mainn/shared/cubit/states.dart';
 
 import 'package:sqflite/sqflite.dart';
-import '../shared/components/constants.dart';
+import '../../shared/components/constants.dart';
 class HomeLayout extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();

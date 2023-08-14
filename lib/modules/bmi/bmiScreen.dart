@@ -9,7 +9,6 @@ class bmiScreen extends StatefulWidget {
   @override
   State<bmiScreen> createState() => _bmiScreenState();
 }
-
 class _bmiScreenState extends State<bmiScreen> {
   bool isMale = true;
   double height = 120;
